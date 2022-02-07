@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Elements\" />
+    <None Remove="UnitsNet" />
+    <None Remove="HistoricData\" />
+    <None Remove="Sylvan.Data.Csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Elements\" />
+    <Folder Include="HistoricData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="UnitsNet" Version="4.116.0" />
+    <PackageReference Include="Sylvan.Data.Csv" Version="1.1.11" />
+  </ItemGroup>
+</Project>
