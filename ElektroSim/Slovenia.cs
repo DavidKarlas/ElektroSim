@@ -1,123 +1,88 @@
-﻿using System;
-using ElektroSim.Elements;
-using UnitsNet;
+﻿using UnitsNet;
 using UnitsNet.Units;
 
 namespace ElektroSim
 {
-    public class Slovenia
+    public class Slovenia : ElectricSystem
     {
         public Slovenia()
         {
-            
+            var dravaAfterFormin = CreateWaterBody("Hrvaška meja", new Volume(0, VolumeUnit.CubicHectometer), null);
+            var dravaPtujskoJezero = CreateWaterBody("Ptujsko jezero", new Volume(4.5, VolumeUnit.CubicHectometer), dravaAfterFormin);
+            var dravaAfterMariborskiOtok = CreateWaterBody("Za HE MariborskiOtok", new Volume(4.5, VolumeUnit.CubicHectometer), dravaPtujskoJezero);
+            var dravaBeforeMariborskiOtok = CreateWaterBody("Pred HE MariborskiOtok", new Volume(2.1, VolumeUnit.CubicHectometer), dravaAfterMariborskiOtok);
+            var dravaBeforeFala = CreateWaterBody("Pred HE Fala", new Volume(0.9, VolumeUnit.CubicHectometer), dravaBeforeMariborskiOtok);
+            var dravaBeforeOžbalt = CreateWaterBody("Pred HE Ožbalt", new Volume(1.4, VolumeUnit.CubicHectometer), dravaBeforeFala);
+            var dravaBeforeVuhred = CreateWaterBody("Pred HE Vuhred", new Volume(2.2, VolumeUnit.CubicHectometer), dravaBeforeOžbalt);
+            var dravaBeforeVuzenica = CreateWaterBody("Pred HE Vuzenica", new Volume(1.8, VolumeUnit.CubicHectometer), dravaBeforeVuhred);
+            var dravaBeforeDravograd = CreateWaterBody("Avstrijska meja", new Volume(2, VolumeUnit.CubicHectometer), dravaBeforeVuzenica);
 
-            var dravaBeforeDravograd = new WaterBody()
-            {
-                PoolSize = new Volume(2, VolumeUnit.CubicHectometer)
-            };
-            var dravaBeforeVuzenica = new WaterBody()
-            {
-                PoolSize = new Volume(1.8, VolumeUnit.CubicHectometer)
-            };
-            var heDravograd = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeDravograd,
-                WaterBodyAfter = dravaBeforeVuzenica,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(405),
-                MaxPower = Power.FromMegawatts(26.2)
-            };
-            var dravaBeforeVuhred = new WaterBody()
-            {
-                PoolSize = new Volume(2.2, VolumeUnit.CubicHectometer)
-            };
-            var heVuzenica = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeVuzenica,
-                WaterBodyAfter = dravaBeforeVuhred,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(550),
-                MaxPower = Power.FromMegawatts(55.6)
-            };
-            var dravaBeforeOžbalt = new WaterBody()
-            {
-                PoolSize = new Volume(1.4, VolumeUnit.CubicHectometer)
-            };
-            var heVuhred = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeVuhred,
-                WaterBodyAfter = dravaBeforeOžbalt,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(550),
-                MaxPower = Power.FromMegawatts(72.3)
-            };
-            var dravaBeforeFala = new WaterBody()
-            {
-                PoolSize = new Volume(0.9, VolumeUnit.CubicHectometer)
-            };
-            var heOžbalt = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeOžbalt,
-                WaterBodyAfter = dravaBeforeFala,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(550),
-                MaxPower = Power.FromMegawatts(73.2)
-            };
-            var dravaBeforeMariborskiOtok = new WaterBody()
-            {
-                PoolSize = new Volume(2.1, VolumeUnit.CubicHectometer)
-            };
-            var heFala = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeFala,
-                WaterBodyAfter = dravaBeforeMariborskiOtok,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(525),
-                MaxPower = Power.FromMegawatts(58)
-            };
-            var dravaBeforeZlatoličje = new WaterBody()
-            {
-                PoolSize = new Volume(4.5, VolumeUnit.CubicHectometer)
-            };
-            var heMariborskiOtok = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeMariborskiOtok,
-                WaterBodyAfter = dravaBeforeZlatoličje,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(550),
-                MaxPower = Power.FromMegawatts(60)
-            };
-            var dravaPtujskoJezero = new WaterBody()
-            {
-                PoolSize = new Volume(0, VolumeUnit.CubicHectometer)
-            };
-            var heZlatoličje = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeZlatoličje,
-                WaterBodyAfter = dravaPtujskoJezero,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(530),
-                MaxPower = Power.FromMegawatts(136)
-            };
-            var dravaAfterFormin = new WaterBody()
-            {
-                PoolSize = new Volume(double.PositiveInfinity, VolumeUnit.CubicHectometer)
-            };
-            var heFormin = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaPtujskoJezero,
-                WaterBodyAfter = dravaAfterFormin,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(500),
-                MaxPower = Power.FromMegawatts(116)
-            };
+            CreateHydroPowerPlant(
+                "HE Dravograd",
+                dravaBeforeDravograd,
+                dravaBeforeVuzenica,
+                VolumeFlow.FromCubicMetersPerSecond(405),
+                Power.FromMegawatts(26.2));
+            CreateHydroPowerPlant(
+                "HE Vuznica",
+                dravaBeforeVuzenica,
+                dravaBeforeVuhred,
+                VolumeFlow.FromCubicMetersPerSecond(550),
+                Power.FromMegawatts(55.6));
+            CreateHydroPowerPlant(
+                "HE Vuhred",
+                dravaBeforeVuhred,
+                dravaBeforeOžbalt,
+                VolumeFlow.FromCubicMetersPerSecond(550),
+                Power.FromMegawatts(72.3));
+            CreateHydroPowerPlant(
+                "HE Ožbalt",
+                dravaBeforeOžbalt,
+                dravaBeforeFala,
+                VolumeFlow.FromCubicMetersPerSecond(550),
+                Power.FromMegawatts(73.2));
+            CreateHydroPowerPlant(
+                "HE Fala",
+                dravaBeforeFala,
+                dravaBeforeMariborskiOtok,
+                VolumeFlow.FromCubicMetersPerSecond(525),
+                Power.FromMegawatts(58));
+            CreateHydroPowerPlant(
+                "HE Mariborski Otok",
+                dravaBeforeMariborskiOtok,
+                dravaAfterMariborskiOtok,
+                VolumeFlow.FromCubicMetersPerSecond(550),
+                Power.FromMegawatts(60));
+            CreateHydroPowerPlant(
+                "HE Zlatoličje",
+                dravaAfterMariborskiOtok,
+                dravaPtujskoJezero,
+                VolumeFlow.FromCubicMetersPerSecond(530),
+                Power.FromMegawatts(136),
+                VolumeFlow.FromCubicMetersPerSecond(10));
+            CreateHydroPowerPlant(
+                "HE Formin",
+                dravaPtujskoJezero,
+                dravaAfterFormin,
+                VolumeFlow.FromCubicMetersPerSecond(500),
+                Power.FromMegawatts(116),
+                VolumeFlow.FromCubicMetersPerSecond(10));
+            CreateHydroPowerPlant(
+                "MHE Markovci",
+                dravaPtujskoJezero,
+                dravaAfterFormin,
+                VolumeFlow.FromCubicMetersPerSecond(29.75),
+                Power.FromMegawatts(0.9),
+                VolumeFlow.FromCubicMetersPerSecond(10));
+            CreateHydroPowerPlant(
+                "MHE Melje",
+                dravaAfterMariborskiOtok,
+                dravaPtujskoJezero,
+                VolumeFlow.FromCubicMetersPerSecond(33),
+                Power.FromMegawatts(2.26),
+                VolumeFlow.FromCubicMetersPerSecond(10));
 
-            var mheMarkovci = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaPtujskoJezero,
-                WaterBodyAfter = dravaAfterFormin,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(29.75),
-                MaxPower = Power.FromMegawatts(0.9)
-            };
-            var mheMelje = new HydroPowerPlant()
-            {
-                WaterBodyBefore = dravaBeforeZlatoličje,
-                WaterBodyAfter = dravaPtujskoJezero,
-                MaxFlow = VolumeFlow.FromCubicMetersPerSecond(33),
-                MaxPower = Power.FromMegawatts(2.26)
-            };
+            Freeze();
         }
     }
 }

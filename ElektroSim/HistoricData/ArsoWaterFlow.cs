@@ -1,28 +1,48 @@
 ﻿using System;
 using Sylvan.Data.Csv;
+using UnitsNet;
 
 namespace ElektroSim.HistoricData
 {
     public class ArsoWaterFlow
     {
-        public double[] Data { get; }
-        private ArsoWaterFlow(double[] data)
+        public Dictionary<string, Volume[]> NamedInflows { get; } = new();
+
+        private ArsoWaterFlow(Dictionary<string, Volume[]> namedInflows)
         {
-            Data = data;
+            NamedInflows = namedInflows;
         }
 
-        public static async Task<ArsoWaterFlow> ParseAsync(string path, Resolution resolution, DateTime start, DateTime end)
+        public static async Task<ArsoWaterFlow> ParseAsync(string[] paths, Resolution resolution)
         {
-            using var csv = CsvDataReader.Create(path);
-
-
-
-            while (await csv.ReadAsync())
+            var namedInflows = new Dictionary<string, Volume[]>();
+            foreach (var path in paths)
             {
-                var id = csv.GetInt32(0);
-                var name = csv.GetString(1);
-                var date = csv.GetDateTime(2);
+                using var csv = CsvDataReader.Create(path);
+
+                var fileName = Path.GetFileNameWithoutExtension(path);
+                var pretokIndex = csv.GetOrdinal("pretok (m3/s)");
+                var data = new Volume[resolution.NumberOfBrackets];
+                namedInflows.Add(fileName, data);
+
+                int index = 0;
+                while (await csv.ReadAsync())
+                {
+                    var val = csv.GetDouble(pretokIndex);
+                    if (resolution.Precision == ResolutionPrecision.OneHour)
+                    {
+                        for (int j = 0; j < 24; j++)
+                        {
+                            data[index++] = Volume.FromCubicMeters(val * 3600);
+                        }
+                    }
+                    else
+                    {
+                        data[index++] = Volume.FromCubicMeters(val * 3600 * 24);
+                    }
+                }
             }
+            return new ArsoWaterFlow(namedInflows);
         }
     }
 }
