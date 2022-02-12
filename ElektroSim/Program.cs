@@ -13,6 +13,7 @@ var ENTSOE_LoadData = await ENTSOE_Load.ParseAsync(
                      @"C:\Users\davkar\Downloads\Total Load - Day Ahead _ Actual_202001010000-202101010000.csv", resolution);
 
 var dravaRiver = new Slovenia();
+new CalcMinPower(dravaRiver);
 
 var simulator = new Simulator(resolution, dravaRiver, ENTSOE_LoadData, arsoWaterFlowData);
 

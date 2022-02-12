@@ -15,12 +15,12 @@ namespace ElektroSim
 
         private void HeSava()
         {
-            var dravaAfterFormin = CreateWaterBody("Hrvaška meja", new Volume(0, VolumeUnit.CubicHectometer), null);
-            var dravaPtujskoJezero = CreateWaterBody("Ptujsko jezero", new Volume(4.5, VolumeUnit.CubicHectometer), dravaAfterFormin);
-            var dravaAfterMariborskiOtok = CreateWaterBody("Za HE MariborskiOtok", new Volume(4.5, VolumeUnit.CubicHectometer), dravaPtujskoJezero);
-            var dravaBeforeMariborskiOtok = CreateWaterBody("Pred HE MariborskiOtok", new Volume(2.1, VolumeUnit.CubicHectometer), dravaAfterMariborskiOtok);
-            var dravaBeforeFala = CreateWaterBody("Pred HE Fala", new Volume(0.9, VolumeUnit.CubicHectometer), dravaBeforeMariborskiOtok);
-            var predVrhovo = CreateWaterBody("Pred HE Ožbalt", new Volume(1.16, VolumeUnit.CubicHectometer), dravaBeforeFala);
+            var poBrežice = CreateWaterBody("Sava - Hrvaška meja", new Volume(0, VolumeUnit.CubicHectometer), null);
+            var predBrežice = CreateWaterBody("Pred HE Brežice", new Volume(3.4, VolumeUnit.CubicHectometer), poBrežice);
+            var predKrško = CreateWaterBody("Pred HE Krško", new Volume(1.18, VolumeUnit.CubicHectometer), predBrežice);
+            var predBlanca = CreateWaterBody("Pred HE Blanca", new Volume(1.3, VolumeUnit.CubicHectometer), predKrško);
+            var predBoštjanom = CreateWaterBody("Pred HE Boštjan", new Volume(1.17, VolumeUnit.CubicHectometer), predBlanca);
+            var predVrhovo = CreateWaterBody("Pred HE Vrhovo", new Volume(1.16, VolumeUnit.CubicHectometer), predBoštjanom);
             var predMedvode = CreateWaterBody("Pred HE Medvode", new Volume(1.12, VolumeUnit.CubicHectometer), predVrhovo);
             var predHEMavcice = CreateWaterBody("Pred HE Mavčiče", new Volume(1.68, VolumeUnit.CubicHectometer), predMedvode);
             var predHEMoste = CreateWaterBody("Sava dolinka pred HE Moste", new Volume(2.94, VolumeUnit.CubicHectometer), predHEMavcice);
@@ -46,54 +46,38 @@ namespace ElektroSim
             CreateHydroPowerPlant(
                 "HE Vrhovo",
                 predVrhovo,
-                dravaBeforeFala,
-                VolumeFlow.FromCubicMetersPerSecond(550),
+                predBoštjanom,
+                VolumeFlow.FromCubicMetersPerSecond(501),
                 Power.FromMegawatts(34));
             CreateHydroPowerPlant(
-                "HE Fala",
-                dravaBeforeFala,
-                dravaBeforeMariborskiOtok,
-                VolumeFlow.FromCubicMetersPerSecond(525),
-                Power.FromMegawatts(58));
-            CreateHydroPowerPlant(
-                "HE Mariborski Otok",
-                dravaBeforeMariborskiOtok,
-                dravaAfterMariborskiOtok,
-                VolumeFlow.FromCubicMetersPerSecond(550),
-                Power.FromMegawatts(60));
-            CreateHydroPowerPlant(
-                "HE Zlatoličje",
-                dravaAfterMariborskiOtok,
-                dravaPtujskoJezero,
-                VolumeFlow.FromCubicMetersPerSecond(530),
-                Power.FromMegawatts(136),
-                VolumeFlow.FromCubicMetersPerSecond(10));
-            CreateHydroPowerPlant(
-                "HE Formin",
-                dravaPtujskoJezero,
-                dravaAfterFormin,
+                "HE Boštjan",
+                predBoštjanom,
+                predBlanca,
                 VolumeFlow.FromCubicMetersPerSecond(500),
-                Power.FromMegawatts(116),
-                VolumeFlow.FromCubicMetersPerSecond(10));
+                Power.FromMegawatts(32.5));
             CreateHydroPowerPlant(
-                "MHE Markovci",
-                dravaPtujskoJezero,
-                dravaAfterFormin,
-                VolumeFlow.FromCubicMetersPerSecond(29.75),
-                Power.FromMegawatts(0.9),
-                VolumeFlow.FromCubicMetersPerSecond(10));
+                "HE Blanca",
+                predBlanca,
+                predKrško,
+                VolumeFlow.FromCubicMetersPerSecond(500),
+                Power.FromMegawatts(39.12));
             CreateHydroPowerPlant(
-                "MHE Melje",
-                dravaAfterMariborskiOtok,
-                dravaPtujskoJezero,
-                VolumeFlow.FromCubicMetersPerSecond(33),
-                Power.FromMegawatts(2.26),
-                VolumeFlow.FromCubicMetersPerSecond(10));
+                "HE Krško",
+                predKrško,
+                predBrežice,
+                VolumeFlow.FromCubicMetersPerSecond(500),
+                Power.FromMegawatts(39.12));
+            CreateHydroPowerPlant(
+                "HE Brežice",
+                predBrežice,
+                poBrežice,
+                VolumeFlow.FromCubicMetersPerSecond(500),
+                Power.FromMegawatts(47.4));
         }
 
         private void HeDrava()
         {
-            var dravaAfterFormin = CreateWaterBody("Hrvaška meja", new Volume(0, VolumeUnit.CubicHectometer), null);
+            var dravaAfterFormin = CreateWaterBody("Drava - Hrvaška meja", new Volume(0, VolumeUnit.CubicHectometer), null);
             var dravaPtujskoJezero = CreateWaterBody("Ptujsko jezero", new Volume(4.5, VolumeUnit.CubicHectometer), dravaAfterFormin);
             var dravaAfterMariborskiOtok = CreateWaterBody("Za HE MariborskiOtok", new Volume(4.5, VolumeUnit.CubicHectometer), dravaPtujskoJezero);
             var dravaBeforeMariborskiOtok = CreateWaterBody("Pred HE MariborskiOtok", new Volume(2.1, VolumeUnit.CubicHectometer), dravaAfterMariborskiOtok);
