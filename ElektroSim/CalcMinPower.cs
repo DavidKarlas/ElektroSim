@@ -1,6 +1,7 @@
 ﻿using System;
 using ElektroSim.Elements;
 using UnitsNet;
+using UnitsNet.Units;
 
 namespace ElektroSim
 {
@@ -21,15 +22,17 @@ namespace ElektroSim
             list.Add((GetPowerPLant("Boštjan"), Volume.FromCubicMeters(65)));
             list.Add((GetPowerPLant("Krško"), Volume.FromCubicMeters(63)));
             list.Add((GetPowerPLant("Brežice"), Volume.FromCubicMeters(60)));
+            list.Add((GetPowerPLant("Solkan"), Volume.FromCubicMeters(20)));
+            list.Add((GetPowerPLant("Ajba"), Volume.FromCubicMeters(20)));
 
             var power = Energy.FromMegawattHours(0);
             foreach (var item in list)
             {
                 var newPower = item.powerPlant.CalcEnergy(item.flow * 3600);
                 power += newPower;
-                Console.WriteLine(item.powerPlant.Name + " " + newPower.As(UnitsNet.Units.EnergyUnit.MegawattHour));
+                Console.WriteLine(item.powerPlant.Name + "\t\t-\t" + VolumeFlow.FromCubicMetersPerSecond(item.flow.As(VolumeUnit.CubicMeter)) + "\t-\t" + Power.FromMegawatts(Math.Round(newPower.As(UnitsNet.Units.EnergyUnit.MegawattHour), 2)));
             }
-            Console.WriteLine("Total:" + power);
+            Console.WriteLine("Total:" + Power.FromMegawatts(power.As(EnergyUnit.MegawattHour)));
         }
 
         private HydroPowerPlant GetPowerPLant(string name)

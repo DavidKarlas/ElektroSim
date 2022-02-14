@@ -6,17 +6,16 @@ var resolution = new Resolution(ResolutionPrecision.OneHour,
                     new DateTime(2020, 1, 1),
                     new DateTime(2021, 1, 1));
 
-var arsoWaterFlowData = await ArsoWaterFlow.ParseAsync(
-                    new[] { @"C:\Users\davkar\Downloads\Avstrijska meja.txt" }, resolution);
+//var arsoWaterFlowData = await ArsoWaterFlow.ParseAsync(
+//                    new[] { @"C:\Users\davkar\Downloads\Avstrijska meja.txt" }, resolution);
 
-var ENTSOE_LoadData = await ENTSOE_Load.ParseAsync(
-                     @"C:\Users\davkar\Downloads\Total Load - Day Ahead _ Actual_202001010000-202101010000.csv", resolution);
+//var ENTSOE_LoadData = await ENTSOE_Load.ParseAsync(
+//                     @"C:\Users\davkar\Downloads\Total Load - Day Ahead _ Actual_202001010000-202101010000.csv", resolution);
 
 var dravaRiver = new Slovenia();
 new CalcMinPower(dravaRiver);
+//var simulator = new Simulator(resolution, dravaRiver, ENTSOE_LoadData, arsoWaterFlowData);
 
-var simulator = new Simulator(resolution, dravaRiver, ENTSOE_LoadData, arsoWaterFlowData);
-
-simulator.Run();
+//simulator.Run();
 
 Console.ReadLine();

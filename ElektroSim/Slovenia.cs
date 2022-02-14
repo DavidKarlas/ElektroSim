@@ -5,13 +5,80 @@ namespace ElektroSim
 {
     public class Slovenia : ElectricSystem
     {
+        // Based on number from Avče data
+        private const double MinFlowFactorForPumpedHydro = 4 / 600.0;
+
         public Slovenia()
         {
             HeDrava();
             HeSava();
+            HeSoca();
+
+            CreateNuclearPowerPlant("JE Krško", Power.FromMegawatts(696 / 2), Power.FromMegawatts(696 / 2));
+            CreateFossilPowerPlant("TE Šoštanj - Blok 6", Power.FromMegawatts(542.3 * 0.42), Power.FromMegawatts(542.3), Mass.FromKilograms(870), Duration.FromDays(7));
+            CreateFossilPowerPlant("TE Šoštanj - Blok 5", Power.FromMegawatts(305 * 0.42), Power.FromMegawatts(305), Mass.FromKilograms(870), Duration.FromDays(7));
+            CreateFossilPowerPlant("TE Šoštanj - Plin 51", Power.FromMegawatts(42), Power.FromMegawatts(42), Mass.FromKilograms(554), Duration.FromHours(2));
+            CreateFossilPowerPlant("TE Šoštanj - Plin 52", Power.FromMegawatts(42), Power.FromMegawatts(42), Mass.FromKilograms(554), Duration.FromHours(2));
 
             Freeze();
         }
+
+        private void HeSoca()
+        {
+            var poSolkanu = CreateWaterBody("Soča - Italijanska meja", new Volume(0, VolumeUnit.CubicHectometer), null);
+            var predSolkan = CreateWaterBody("Pred HE Solkan", new Volume(3.4, VolumeUnit.CubicHectometer), poSolkanu);
+            var predPlave = CreateWaterBody("Pred HE Plave", new Volume(1.18, VolumeUnit.CubicHectometer), predSolkan);
+            var avceJezero = CreateWaterBody("Avče jezero", new Volume(2.2, VolumeUnit.CubicHectometer), predPlave);
+            var predDoblar = CreateWaterBody("Pred HE Doblar", new Volume(1.3, VolumeUnit.CubicHectometer), predPlave);
+
+            CreateHydroPowerPlant(
+                "HE Doblar 1",
+                predDoblar,
+                predPlave,
+                VolumeFlow.FromCubicMetersPerSecond(75),
+                Power.FromMegawatts(30));
+            CreateHydroPowerPlant(
+                "HE Doblar 2",
+                predDoblar,
+                predPlave,
+                VolumeFlow.FromCubicMetersPerSecond(105),
+                Power.FromMegawatts(40));
+            CreatePumpedHydroPowerPlant(
+                "ČHE Avče",
+                predPlave,
+                avceJezero,
+                Power.FromMegawatts(185),
+                VolumeFlow.FromCubicMetersPerSecond(40),
+                VolumeFlow.FromCubicMetersPerSecond(40 * MinFlowFactorForPumpedHydro),
+                Power.FromMegawatts(180),
+                VolumeFlow.FromCubicMetersPerSecond(34),
+                VolumeFlow.FromCubicMetersPerSecond(34 * MinFlowFactorForPumpedHydro));
+            CreateHydroPowerPlant(
+                "HE Plave 1",
+                predPlave,
+                predSolkan,
+                VolumeFlow.FromCubicMetersPerSecond(75),
+                Power.FromMegawatts(15));
+            CreateHydroPowerPlant(
+                "HE Plave 2",
+                predPlave,
+                predSolkan,
+                VolumeFlow.FromCubicMetersPerSecond(105),
+                Power.FromMegawatts(20));
+            CreateHydroPowerPlant(
+                "MHE Ajba",
+                predPlave,
+                predSolkan,
+                VolumeFlow.FromCubicMetersPerSecond(2.5),
+                Power.FromMegawatts(0.25));
+            CreateHydroPowerPlant(
+                "HE Solkan",
+                predSolkan,
+                poSolkanu,
+                VolumeFlow.FromCubicMetersPerSecond(180),
+                Power.FromMegawatts(32));
+        }
+
 
         private void HeSava()
         {
@@ -82,6 +149,7 @@ namespace ElektroSim
             var dravaAfterMariborskiOtok = CreateWaterBody("Za HE MariborskiOtok", new Volume(4.5, VolumeUnit.CubicHectometer), dravaPtujskoJezero);
             var dravaBeforeMariborskiOtok = CreateWaterBody("Pred HE MariborskiOtok", new Volume(2.1, VolumeUnit.CubicHectometer), dravaAfterMariborskiOtok);
             var dravaBeforeFala = CreateWaterBody("Pred HE Fala", new Volume(0.9, VolumeUnit.CubicHectometer), dravaBeforeMariborskiOtok);
+            var kozjakJezero = CreateWaterBody("ČHE Kozjak jezero", new Volume(2.892, VolumeUnit.CubicHectometer), dravaBeforeFala);
             var dravaBeforeOžbalt = CreateWaterBody("Pred HE Ožbalt", new Volume(1.4, VolumeUnit.CubicHectometer), dravaBeforeFala);
             var dravaBeforeVuhred = CreateWaterBody("Pred HE Vuhred", new Volume(2.2, VolumeUnit.CubicHectometer), dravaBeforeOžbalt);
             var dravaBeforeVuzenica = CreateWaterBody("Pred HE Vuzenica", new Volume(1.8, VolumeUnit.CubicHectometer), dravaBeforeVuhred);
@@ -108,9 +176,19 @@ namespace ElektroSim
             CreateHydroPowerPlant(
                 "HE Ožbalt",
                 dravaBeforeOžbalt,
-                dravaBeforeFala,
+                kozjakJezero,
                 VolumeFlow.FromCubicMetersPerSecond(550),
                 Power.FromMegawatts(73.2));
+            CreatePumpedHydroPowerPlant(
+                "ČHE Avče",
+                dravaBeforeFala,
+                kozjakJezero,
+                Power.FromMegawatts(2 * 202.5),
+                VolumeFlow.FromCubicMetersPerSecond(71.4),
+                VolumeFlow.FromCubicMetersPerSecond(71.4 * MinFlowFactorForPumpedHydro),
+                Power.FromMegawatts(2 * 212.8),
+                VolumeFlow.FromCubicMetersPerSecond(56.6),
+                VolumeFlow.FromCubicMetersPerSecond(56.6 * MinFlowFactorForPumpedHydro)).Disabled = true;
             CreateHydroPowerPlant(
                 "HE Fala",
                 dravaBeforeFala,

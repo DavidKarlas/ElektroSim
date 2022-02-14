@@ -12,6 +12,7 @@ namespace ElektroSim.Elements
 
         public string Name { get; }
         public Energy[] Produced { get; set; } = Array.Empty<Energy>();
+        public bool Disabled { get; set; }
     }
 }
 

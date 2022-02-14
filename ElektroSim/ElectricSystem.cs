@@ -14,6 +14,9 @@ public abstract class ElectricSystem
     public List<WaterBody> WaterBodies { get; } = new();
     public Dictionary<string, WaterBody> NamedWaterBodies { get; } = new();
     public List<HydroPowerPlant> HydroPowerPlants { get; } = new();
+    public List<PumpedHydroPowerPlant> PumpedHydroPowerPlants { get; } = new();
+    public List<NuclearPowerPlant> NuclearPowerPlants { get; } = new();
+    public List<PowerSource> PowerSources { get; } = new();
 
     public WaterBody CreateWaterBody(string name, Volume poolSize, WaterBody? overlowTo)
     {
@@ -48,6 +51,51 @@ public abstract class ElectricSystem
             maxPower,
             minFlow);
         HydroPowerPlants.Add(newPowerPlant);
+        return newPowerPlant;
+    }
+
+    public HydroPowerPlant CreateFossilPowerPlant(string name, Power minPower, Power maxPower, Mass co2PerMegawattHour, Duration minWorktime)
+    {
+        if (IsFrozen)
+            throw new Exception();
+        var newPowerPlant = new FossilPowerPlant(name, minPower, maxPower, co2PerMegawattHour, minWorktime);
+        PowerSources.Add(newPowerPlant);
+        return newPowerPlant;
+    }
+
+    public HydroPowerPlant CreateNuclearPowerPlant(string name, Power minPower, Power maxPower)
+    {
+        if (IsFrozen)
+            throw new Exception();
+        var newPowerPlant = new NuclearPowerPlant(name, minPower, maxPower);
+        NuclearPowerPlants.Add(newPowerPlant);
+        return newPowerPlant;
+    }
+
+    public HydroPowerPlant CreatePumpedHydroPowerPlant(
+        string name,
+        WaterBody waterBodyLower,
+        WaterBody waterBodyUpper,
+        Power maxPower,
+        VolumeFlow maxFlow,
+        VolumeFlow minFlow,
+        Power maxPumpingPower,
+        VolumeFlow maxPumpingFlow,
+        VolumeFlow minPumpingFlow)
+    {
+        if (IsFrozen)
+            throw new Exception();
+        var newPowerPlant = new PumpedHydroPowerPlant(
+            name,
+            waterBodyLower,
+            waterBodyUpper,
+            maxPower,
+            maxFlow,
+            minFlow,
+            maxPumpingPower,
+            maxPumpingFlow,
+            minPumpingFlow);
+        PumpedHydroPowerPlants.Add(newPowerPlant);
         return newPowerPlant;
     }
 }
