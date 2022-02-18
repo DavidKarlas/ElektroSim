@@ -13,9 +13,6 @@ public abstract class ElectricSystem
 
     public List<WaterBody> WaterBodies { get; } = new();
     public Dictionary<string, WaterBody> NamedWaterBodies { get; } = new();
-    public List<HydroPowerPlant> HydroPowerPlants { get; } = new();
-    public List<PumpedHydroPowerPlant> PumpedHydroPowerPlants { get; } = new();
-    public List<NuclearPowerPlant> NuclearPowerPlants { get; } = new();
     public List<PowerSource> PowerSources { get; } = new();
 
     public WaterBody CreateWaterBody(string name, Volume poolSize, WaterBody? overlowTo)
@@ -50,11 +47,11 @@ public abstract class ElectricSystem
             maxFlow,
             maxPower,
             minFlow);
-        HydroPowerPlants.Add(newPowerPlant);
+        PowerSources.Add(newPowerPlant);
         return newPowerPlant;
     }
 
-    public HydroPowerPlant CreateFossilPowerPlant(string name, Power minPower, Power maxPower, Mass co2PerMegawattHour, Duration minWorktime)
+    public FossilPowerPlant CreateFossilPowerPlant(string name, Power minPower, Power maxPower, Mass co2PerMegawattHour, Duration minWorktime)
     {
         if (IsFrozen)
             throw new Exception();
@@ -63,12 +60,21 @@ public abstract class ElectricSystem
         return newPowerPlant;
     }
 
-    public HydroPowerPlant CreateNuclearPowerPlant(string name, Power minPower, Power maxPower)
+    public NuclearPowerPlant CreateNuclearPowerPlant(string name, Power minPower, Power maxPower)
     {
         if (IsFrozen)
             throw new Exception();
         var newPowerPlant = new NuclearPowerPlant(name, minPower, maxPower);
-        NuclearPowerPlants.Add(newPowerPlant);
+        PowerSources.Add(newPowerPlant);
+        return newPowerPlant;
+    }
+
+    public SolarPowerSource CreateSolarPowerPlant(string name, Power maxPower)
+    {
+        if (IsFrozen)
+            throw new Exception();
+        var newPowerPlant = new SolarPowerSource(name, maxPower);
+        PowerSources.Add(newPowerPlant);
         return newPowerPlant;
     }
 
@@ -95,7 +101,7 @@ public abstract class ElectricSystem
             maxPumpingPower,
             maxPumpingFlow,
             minPumpingFlow);
-        PumpedHydroPowerPlants.Add(newPowerPlant);
+        PowerSources.Add(newPowerPlant);
         return newPowerPlant;
     }
 }

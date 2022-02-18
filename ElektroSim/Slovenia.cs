@@ -15,6 +15,7 @@ namespace ElektroSim
             HeSoca();
 
             CreateNuclearPowerPlant("JE Krško", Power.FromMegawatts(696 / 2), Power.FromMegawatts(696 / 2));
+
             CreateFossilPowerPlant("TE Šoštanj - Blok 6", Power.FromMegawatts(542.3 * 0.42), Power.FromMegawatts(542.3), Mass.FromKilograms(870), Duration.FromDays(7));
             CreateFossilPowerPlant("TE Šoštanj - Blok 5", Power.FromMegawatts(305 * 0.42), Power.FromMegawatts(305), Mass.FromKilograms(870), Duration.FromDays(7));
             CreateFossilPowerPlant("TE Šoštanj - Plin 51", Power.FromMegawatts(42), Power.FromMegawatts(42), Mass.FromKilograms(554), Duration.FromHours(2));

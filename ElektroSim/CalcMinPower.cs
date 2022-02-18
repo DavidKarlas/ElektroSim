@@ -37,7 +37,7 @@ namespace ElektroSim
 
         private HydroPowerPlant GetPowerPLant(string name)
         {
-            return this.electricSystem.HydroPowerPlants.Single(p => p.Name.Contains(name));
+            return this.electricSystem.PowerSources.OfType<HydroPowerPlant>().Single(p => p.Name.Contains(name));
         }
     }
 }

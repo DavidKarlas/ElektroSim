@@ -1,4 +1,5 @@
 ﻿using ElektroSim;
+using ElektroSim.Elements;
 using ElektroSim.HistoricData;
 using UnitsNet;
 
@@ -23,7 +24,7 @@ class Simulator
             waterBody.Levels = new Volume[Resolution.NumberOfBrackets];
         }
 
-        foreach (var powerSource in ElectricSystem.HydroPowerPlants)
+        foreach (var powerSource in ElectricSystem.PowerSources)
         {
             powerSource.Produced = new Energy[Resolution.NumberOfBrackets];
         }
@@ -55,7 +56,7 @@ class Simulator
             sw.Write($"{waterBody.Name} - overflow;");
             sw.Write($"{waterBody.Name} - level;");
         }
-        foreach (var powerPlants in ElectricSystem.HydroPowerPlants)
+        foreach (var powerPlants in ElectricSystem.PowerSources)
         {
             sw.Write($"{powerPlants.Name} - power;");
         }
@@ -75,7 +76,7 @@ class Simulator
                 sw.Write($"{waterBody.Overflows[i].As(UnitsNet.Units.VolumeUnit.CubicMeter)};");
                 sw.Write($"{waterBody.Levels[i].As(UnitsNet.Units.VolumeUnit.CubicMeter)};");
             }
-            foreach (var powerPlant in ElectricSystem.HydroPowerPlants)
+            foreach (var powerPlant in ElectricSystem.PowerSources)
             {
                 sw.Write($"{powerPlant.Produced[i].As(UnitsNet.Units.EnergyUnit.MegawattHour)};");
             }
@@ -93,7 +94,7 @@ class Simulator
     {
         Console.WriteLine($"================================");
         Console.WriteLine($"================================");
-        foreach (var powerPlant in ElectricSystem.HydroPowerPlants)
+        foreach (var powerPlant in ElectricSystem.PowerSources)
         {
             Console.WriteLine($"{powerPlant.Name}: {UnitMath.Sum(powerPlant.Produced, UnitsNet.Units.EnergyUnit.GigawattHour)}");
         }
@@ -109,7 +110,7 @@ class Simulator
         if (time.TimeOfDay.TotalSeconds == 0)
         {
             Console.WriteLine($"Time: {Resolution.GetTime(i)}");
-            foreach (var powerPlant in ElectricSystem.HydroPowerPlants)
+            foreach (var powerPlant in ElectricSystem.PowerSources)
             {
                 Console.WriteLine($"{powerPlant.Name}: {powerPlant.Produced[i].As(UnitsNet.Units.EnergyUnit.MegawattHour):0.00}");
             }
@@ -123,7 +124,7 @@ class Simulator
 
     private void ProduceElectricity(int i)
     {
-        foreach (var hydroPlant in ElectricSystem.HydroPowerPlants)
+        foreach (var hydroPlant in ElectricSystem.PowerSources.OfType<HydroPowerPlant>())
         {
             if (hydroPlant.MinFlow.CubicMetersPerSecond == 0)
                 continue;
@@ -132,7 +133,7 @@ class Simulator
             hydroPlant.Produced[i] += hydroPlant.CalcEnergy(drainSize);
             hydroPlant.WaterBodyAfter.CurrentPoolSize += drainSize;
         }
-        foreach (var hydroPlant in ElectricSystem.HydroPowerPlants)
+        foreach (var hydroPlant in ElectricSystem.PowerSources.OfType<HydroPowerPlant>())
         {
             var drainSize = UnitMath.Min(hydroPlant.WaterBodyBefore.CurrentPoolSize, (hydroPlant.MaxFlow - hydroPlant.MinFlow).Divide(Resolution.Precision));
             hydroPlant.WaterBodyBefore.CurrentPoolSize -= drainSize;
