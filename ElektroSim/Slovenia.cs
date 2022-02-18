@@ -1,4 +1,5 @@
-﻿using UnitsNet;
+﻿using ElektroSim.HistoricData;
+using UnitsNet;
 using UnitsNet.Units;
 
 namespace ElektroSim
@@ -7,9 +8,14 @@ namespace ElektroSim
     {
         // Based on number from Avče data
         private const double MinFlowFactorForPumpedHydro = 4 / 600.0;
+        private ENTSOE_Data eNTSOE_Data;
 
-        public Slovenia()
+        public Slovenia(ENTSOE_Data eNTSOE_Data)
         {
+            this.eNTSOE_Data = eNTSOE_Data;
+
+            CreateSolarPowerPlant("Slovenia Sonce", eNTSOE_Data.SolarProduction);
+
             HeDrava();
             HeSava();
             HeSoca();

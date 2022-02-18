@@ -5,7 +5,7 @@ using UnitsNet;
 
 class Simulator
 {
-    public Simulator(Resolution resolution, ElectricSystem electricSystem, ENTSOE_Load load, ArsoWaterFlow arsoWaterFlow)
+    public Simulator(Resolution resolution, ElectricSystem electricSystem, ENTSOE_Data load, ArsoWaterFlow arsoWaterFlow)
     {
         Resolution = resolution;
         ElectricSystem = electricSystem;
@@ -32,7 +32,7 @@ class Simulator
 
     public Resolution Resolution { get; }
     public ElectricSystem ElectricSystem { get; }
-    public ENTSOE_Load Load { get; }
+    public ENTSOE_Data Load { get; }
     public ArsoWaterFlow ArsoWaterFlow { get; }
 
     public void Run()
