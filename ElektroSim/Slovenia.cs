@@ -14,7 +14,7 @@ namespace ElektroSim
         {
             this.eNTSOE_Data = eNTSOE_Data;
 
-            CreateSolarPowerPlant("Slovenia Sonce", eNTSOE_Data.SolarProduction);
+            CreateSolarPowerPlant("Slovenia Sonce",  ,eNTSOE_Data.SolarProduction);
 
             HeDrava();
             HeSava();

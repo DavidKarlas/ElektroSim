@@ -69,11 +69,11 @@ public abstract class ElectricSystem
         return newPowerPlant;
     }
 
-    public SolarPowerSource CreateSolarPowerPlant(string name, Power maxPower)
+    public SolarPowerSource CreateSolarPowerPlant(string name, Power[] pastMaxPower, Power[] pastPerf)
     {
         if (IsFrozen)
             throw new Exception();
-        var newPowerPlant = new SolarPowerSource(name, maxPower);
+        var newPowerPlant = new SolarPowerSource(name, pastMaxPower, pastPerf);
         PowerSources.Add(newPowerPlant);
         return newPowerPlant;
     }

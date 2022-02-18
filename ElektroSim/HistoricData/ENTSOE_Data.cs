@@ -1,14 +1,15 @@
 using Sylvan.Data.Csv;
+using UnitsNet;
 
 namespace ElektroSim.HistoricData
 {
     public class ENTSOE_Data
     {
-        public double[] Load { get; }
-        public double[] DayAheadLoad { get; }
-        public double[] SolarProduction { get; }
+        public Power[] Load { get; }
+        public Power[] DayAheadLoad { get; }
+        public Power[] SolarProduction { get; }
 
-        private ENTSOE_Data(double[] load, double[] dayAheadLoad, double[] solarProduction)
+        private ENTSOE_Data(Power[] load, Power[] dayAheadLoad, Power[] solarProduction)
         {
             Load = load;
             DayAheadLoad = dayAheadLoad;
@@ -22,10 +23,10 @@ namespace ElektroSim.HistoricData
             return new ENTSOE_Data(load, dayAheadLoad, solarProduction);
         }
 
-        private static async Task<(double[] load, double[] dayAheadLoad)> ParseLoadAsync(Resolution resolution)
+        private static async Task<(Power[] load, Power[] dayAheadLoad)> ParseLoadAsync(Resolution resolution)
         {
-            var load = new double[resolution.NumberOfBrackets];
-            var dayAheadLoad = new double[resolution.NumberOfBrackets];
+            var load = new Power[resolution.NumberOfBrackets];
+            var dayAheadLoad = new Power[resolution.NumberOfBrackets];
             for (int year = resolution.Start.Year; year < resolution.End.Year; year++)
             {
                 using var csv = CsvDataReader.Create(await DownloadAndCache.GetFileAsync($"https://davidupload.blob.core.windows.net/data/Load_{year}.csv"));
@@ -45,8 +46,8 @@ namespace ElektroSim.HistoricData
                         throw new Exception();
                     if (resolution.Precision == ResolutionPrecision.OneHour)
                     {
-                        load[index] = loadVal;
-                        dayAheadLoad[index++] = dayAheadLoadVal;
+                        load[index] = Power.FromMegawatts(loadVal);
+                        dayAheadLoad[index++] = Power.FromMegawatts(dayAheadLoadVal);
                     }
                     else
                     {
@@ -58,9 +59,13 @@ namespace ElektroSim.HistoricData
             return (load, dayAheadLoad);
         }
 
-        private static async Task<double[]> ParseGenerationAsync(Resolution resolution)
+        private static 
+
+        private static async Task<Power[]> ParseGenerationAsync(Resolution resolution)
         {
-            var solarProduction = new double[resolution.NumberOfBrackets];
+
+
+            var solarProduction = new Power[resolution.NumberOfBrackets];
             for (int year = resolution.Start.Year; year < resolution.End.Year; year++)
             {
                 using var csv = CsvDataReader.Create(await DownloadAndCache.GetFileAsync($"https://davidupload.blob.core.windows.net/data/Generation_{year}.csv"));
@@ -80,7 +85,7 @@ namespace ElektroSim.HistoricData
                     var solar = csv.GetDouble(solarIndex);
                     if (resolution.Precision == ResolutionPrecision.OneHour)
                     {
-                        solarProduction[index++] = solar;
+                        solarProduction[index++] = Power.FromMegawatts(solar);
                     }
                     else
                     {

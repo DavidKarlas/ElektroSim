@@ -9,12 +9,10 @@ var resolution = new Resolution(ResolutionPrecision.OneHour,
 var arsoWaterFlowData = await ArsoWaterFlow.ParseAsync(
                     new[] { @"C:\Users\davkar\Downloads\Avstrijska meja.txt" }, resolution);
 
-var eNTSOE_Data = await global::ElektroSim.HistoricData.ENTSOE_Data.ParseAsync(resolution);
+var eNTSOE_Data = await ENTSOE_Data.ParseAsync(resolution);
 
-var dravaRiver = new Slovenia();
-new CalcMinPower(dravaRiver);
-
-var simulator = new Simulator(resolution, dravaRiver, eNTSOE_Data, arsoWaterFlowData);
+var sloveniaElectroSystem = new Slovenia(eNTSOE_Data);
+var simulator = new Simulator(resolution, sloveniaElectroSystem, eNTSOE_Data, arsoWaterFlowData);
 
 simulator.Run();
 

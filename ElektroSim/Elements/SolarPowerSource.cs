@@ -6,11 +6,13 @@ namespace ElektroSim.Elements
 {
     public class SolarPowerSource : PowerSource
     {
-        public Power MaxPower { get; init; }
-
-        public SolarPowerSource(string name, Power maxPower) : base(name)
+        public SolarPowerSource(string name, Power[] pastMaxPower, Power[] pastPerf) : base(name)
         {
-            MaxPower = maxPower;
+            PastMaxPower = pastMaxPower;
+            PastPerf = pastPerf;
         }
+
+        public Power[] PastMaxPower { get; }
+        public Power[] PastPerf { get; }
     }
 }
