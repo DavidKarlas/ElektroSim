@@ -15,7 +15,7 @@ public abstract class ElectricSystem
     public Dictionary<string, WaterBody> NamedWaterBodies { get; } = new();
     public List<PowerSource> PowerSources { get; } = new();
 
-    public WaterBody CreateWaterBody(string name, Volume poolSize, WaterBody? overlowTo)
+    public WaterBody CreateWaterBody(string name, Volume poolSize, WaterBody? overlowTo, params int[] inFlows)
     {
         if (IsFrozen)
             throw new Exception();
@@ -28,7 +28,8 @@ public abstract class ElectricSystem
         {
             Name = name,
             MaxPoolSize = poolSize,
-            OverflowTo = overlowTo
+            OverflowTo = overlowTo,
+            InFlows = inFlows
         };
         WaterBodies.Add(newWaterBody);
         if (name != null)
@@ -73,12 +74,12 @@ public abstract class ElectricSystem
     {
         if (IsFrozen)
             throw new Exception();
-        var newPowerPlant = new SolarPowerSource(name, pastMaxPower, pastPerf);
+        var newPowerPlant = new SolarPowerSource(name, pastMaxPower, pastPerf, pastMaxPower);
         PowerSources.Add(newPowerPlant);
         return newPowerPlant;
     }
 
-    public HydroPowerPlant CreatePumpedHydroPowerPlant(
+    public PumpedHydroPowerPlant CreatePumpedHydroPowerPlant(
         string name,
         WaterBody waterBodyLower,
         WaterBody waterBodyUpper,

@@ -25,14 +25,14 @@ namespace ElektroSim
             list.Add((GetPowerPLant("Solkan"), Volume.FromCubicMeters(20)));
             list.Add((GetPowerPLant("Ajba"), Volume.FromCubicMeters(20)));
 
-            var power = Energy.FromMegawattHours(0);
+            var power = Power.FromMegawatts(0);
             foreach (var item in list)
             {
-                var newPower = item.powerPlant.CalcEnergy(item.flow * 3600);
+                var newPower = item.powerPlant.CalcPower(item.flow * 3600);
                 power += newPower;
-                Console.WriteLine(item.powerPlant.Name + "\t\t-\t" + VolumeFlow.FromCubicMetersPerSecond(item.flow.As(VolumeUnit.CubicMeter)) + "\t-\t" + Power.FromMegawatts(Math.Round(newPower.As(UnitsNet.Units.EnergyUnit.MegawattHour), 2)));
+                Console.WriteLine(item.powerPlant.Name + "\t\t-\t" + VolumeFlow.FromCubicMetersPerSecond(item.flow.As(VolumeUnit.CubicMeter)) + "\t-\t" + Power.FromMegawatts(Math.Round(newPower.As(UnitsNet.Units.PowerUnit.Megawatt), 2)));
             }
-            Console.WriteLine("Total:" + Power.FromMegawatts(power.As(EnergyUnit.MegawattHour)));
+            Console.WriteLine("Total:" + power);
         }
 
         private HydroPowerPlant GetPowerPLant(string name)

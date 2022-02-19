@@ -21,9 +21,9 @@ namespace ElektroSim.Elements
             MinFlow = minFlow;
         }
 
-        public Energy CalcEnergy(Volume drainSize)
+        public Power CalcPower(Volume drainSize)
         {
-            return Energy.FromWattHours(MaxPower.Watts * (drainSize.CubicMeters / MaxFlow.CubicMetersPerHour));
+            return Power.FromWatts(MaxPower.Watts * (drainSize.CubicMeters / MaxFlow.CubicMetersPerHour));
         }
     }
 }

@@ -11,6 +11,18 @@ namespace ElektroSim.Elements
         public WaterBody? OverflowTo;
         public Volume[] Overflows;
         public Volume[] Levels;
+
+        public int[] InFlows { get; init; }
+
+        public double PoolPercetage
+        {
+            get
+            {
+                if (MaxPoolSize == Volume.Zero)
+                    return 1;
+                return CurrentPoolSize / MaxPoolSize;
+            }
+        }
     }
 }
 

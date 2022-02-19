@@ -1,3 +1,4 @@
+using System.Globalization;
 using Sylvan.Data.Csv;
 using UnitsNet;
 
@@ -40,9 +41,9 @@ namespace ElektroSim.HistoricData
                 {
                     var loadVal = csv.GetDouble(loadIndex);
                     var dayAheadLoadVal = csv.GetDouble(dayAheadIndex);
-                    var dataTime = DateTime.Parse(csv.GetString(timeIndex).Remove(16));
+                    var parsedTime = DateTime.ParseExact(csv.GetString(timeIndex).Remove(16), "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
                     var resTime = resolution.GetTime(index);
-                    if (dataTime != resTime)
+                    if (parsedTime != resTime)
                         throw new Exception();
                     if (resolution.Precision == ResolutionPrecision.OneHour)
                     {
@@ -59,12 +60,8 @@ namespace ElektroSim.HistoricData
             return (load, dayAheadLoad);
         }
 
-        private static 
-
         private static async Task<Power[]> ParseGenerationAsync(Resolution resolution)
         {
-
-
             var solarProduction = new Power[resolution.NumberOfBrackets];
             for (int year = resolution.Start.Year; year < resolution.End.Year; year++)
             {
@@ -77,7 +74,7 @@ namespace ElektroSim.HistoricData
                 while (await csv.ReadAsync())
                 {
                     var time = resolution.GetTime(index);
-                    var parsedTime = DateTime.Parse(csv.GetString(mtuIndex).Remove(16));
+                    var parsedTime = DateTime.ParseExact(csv.GetString(mtuIndex).Remove(16), "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
 
                     if (time != parsedTime)
                         throw new Exception();
